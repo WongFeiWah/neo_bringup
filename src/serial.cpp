@@ -2,8 +2,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <micvsion_bringup/serial.h>
-#include <micvsion_bringup/timeout.h>
+#include <neo_bringup/serial.h>
+#include <neo_bringup/timeout.h>
 
 char myserial::Open(char* port, int baud, char bits, parity parity, char stopbit) 
 {
@@ -18,9 +18,10 @@ char myserial::Open(char* port, int baud, char bits, parity parity, char stopbit
 	if (m_fd < 0)
 	{
         printf("Error Opening %s Port\n", tmp);
+		
         return 0;
 	}
-	
+	//printf("sdkgflasdjf\n");can not jump into this 
 	// Get terminal parameters
 	tcgetattr(m_fd, &m_newtio);
 	tcgetattr(m_fd, &m_oldtio);

@@ -14,7 +14,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(neo_bringup_node src/robot.cpp src/serial.cpp src/timeout.cpp)
+add_executable(neo_bringup_node src/robot.cpp src/serial.cpp src/timeout.cpp src/sonar.cpp include/neo_bringup/sonar.h)
 target_link_libraries(neo_bringup_node
   ${catkin_LIBRARIES}
   pthread
