@@ -8,6 +8,7 @@
 */
 #include <neo_bringup/robot.h>
 
+
 myserial serial;
 
 typedef struct {
@@ -284,6 +285,12 @@ void* robot_serial_thread(void*)
                         {
                             case 0x50:
                                 serialHandlePool->addTask(new Sonar(readData.data));
+                                break;
+                            case 'I':
+                                serialHandlePool->addTask(new Imu(readData.data));
+                                break;
+                            case 0x01:
+                                serialHandlePool->addTask(new Odom(readData.data));
                                 break;
                             default:
                                 break;

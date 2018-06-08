@@ -28,11 +28,8 @@
 #include <neo_bringup/CThreadPool.h>
 #include <neo_bringup/serial.h>
 #include <neo_bringup/sonar.h>
-
-
-
-
-
+#include <neo_bringup/Imu.h>
+#include <neo_bringup/Odom.h>
 
 class neo_bringup{
 protected:

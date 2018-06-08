@@ -12,4 +12,13 @@ typedef struct {
     int right_encoder;
 }odom_data;
 
+class Odom:public CTask
+{
+public:
+    Odom(void *data);
+    ~Odom();
+    void doAction();
+private:
+};
+
 #endif //NEO_BRINGUP_ODOM_H

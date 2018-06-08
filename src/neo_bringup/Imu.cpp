@@ -105,3 +105,14 @@ void imu_handle(void*  read_data)
 }
 
 
+Imu::Imu(void *data) {
+
+}
+
+Imu::~Imu() {
+
+}
+
+void Imu::doAction() {
+
+}

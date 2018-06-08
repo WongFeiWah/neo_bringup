@@ -229,3 +229,14 @@ int  odom_handle(void* read_data)
 }
 
 
+Odom::Odom(void *data) {
+
+}
+
+Odom::~Odom() {
+
+}
+
+void Odom::doAction() {
+
+}
