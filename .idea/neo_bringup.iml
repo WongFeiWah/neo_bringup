@@ -2,11 +2,22 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/neo_bringup/Odom.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/com/CThreadPool.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/neo_bringup/sonar.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/com/serial.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/neo_bringup/Imu.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/robot.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/timeout.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/serial.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/sonar.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/com/timeout.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/sonar_node.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/CThreadPool.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/sonar_node.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/Imu.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/robot.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/sonar.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/timeout.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/Odom.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/include/neo_bringup/serial.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/package.xml" isTestSource="false" />
     </content>

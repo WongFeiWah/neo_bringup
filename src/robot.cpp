@@ -6,50 +6,9 @@
 +----+----+---+----+-+--+--+--+--+--+--+--+--+--+--+--+--------+---+---+----+
 
 */
+#include <neo_bringup/robot.h>
 
-
-#include <math.h>
-#include <stdio.h>
-#include <sys/time.h>
-#include <signal.h>
-#include "ros/ros.h"
-#include <sensor_msgs/JointState.h>
-#include <geometry_msgs/Vector3.h>
-#include <std_msgs/Int32.h>
-#include <geometry_msgs/Twist.h> 
-#include <nav_msgs/Odometry.h>
-#include <sensor_msgs/Imu.h>
-#include <tf/tf.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_datatypes.h>
-
-#include <neo_bringup/CThreadPool.h>
-#include <neo_bringup/CThreadBase.h>
-#include <neo_bringup/serial.h>
-
-#include <pthread.h>
-
-#include <std_msgs/Float32MultiArray.h>
-#include <sensor_msgs/Range.h>
-#include "std_msgs/MultiArrayDimension.h" 
-#include "std_msgs/Float32.h"
-#define TICK2RAD                         0.013
-#define LEFT                             0
-#define RIGHT                            1
-#define WHEEL_RADIUS                     0.033 
-#define WHEEL_SEPARATION                 0.185           // meter (BURGER : 0.160, WAFFLE : 0.287)
-//#define TURNING_RADIUS                   0.1435          // meter (BURGER : 0.080, WAFFLE : 0.1435)
-//#define ROBOT_RADIUS                     0.87           // meter (BURGER : 0.105, WAFFLE : 0.220)
-//#define ENCODER_MAX                      2147483648      // raw
-//#define MOTOR_PULSE                      480
-
-
-static double last_theta = 0.0;
-// Create serial port
 myserial serial;
-//serial::Serial ser; 
-
-nav_msgs::Odometry odom;
 
 typedef struct {
 	float value1;
@@ -57,45 +16,7 @@ typedef struct {
 	float value3;
 }send_data;
 
-typedef struct {
- int left_encoder;
- int right_encoder;
-}odom_data;
-unsigned char cmd_package[18];  //this package used to send the command to opencr through the serial
-bool init_encoder_[2]  = {false, false};
-int  last_diff_tick_[2];
-int  last_tick_[2];
-double last_rad_[2];
-double last_velocity_[2];
-double odom_pose[3];
-float  odom_vel[3];
-double x = 0.0;  
-double y = 0.0;  
-double th = 0.0;  
-
-double vx = 0.0;  
-double vy = 0.0;  
-double vth = 0.0;  
-geometry_msgs::TransformStamped tfs_msg;
-geometry_msgs::TransformStamped odom_tf;
-sensor_msgs::Imu imu_msg;
-//std_msgs::Float32MultiArray sound_wave_data;
-//tf::TransformBroadcaster tfbroadcaster;
-ros::Time time_now, prev_update_time;
-int current_left_encoder,last_left_encoder;
-int current_right_encoder, last_right_encoder;
-pthread_mutex_t Device_mutex ;
-char *read_data = NULL;
-int lock = 1;
-typedef struct{
-  short acc[3];
-  short gyro[3];
- 
-  float w;
-  float x;
-  float y;
-  float z;
-}IMU_MSG;
+unsigned char cmd_package[18];
 
 typedef struct {
 	double goal_linear_velocity;
@@ -109,14 +30,6 @@ typedef struct {
     unsigned char mode;
 }ST_PACKAGE_HEAD;
 
-typedef struct{
- float sound_wave_time0;
- float sound_wave_time1;
- float sound_wave_time2;
- float sound_wave_time3;
-}SOUND_TIME;
-
-SOUND_TIME sound_time;
 typedef struct {
     unsigned char end;
 }ST_PACKAGE_END;
@@ -127,77 +40,11 @@ typedef struct {
     unsigned char data[256];
 }ST_PACKAGE_DATA;
 
-int    old_encoder[3]={0,0,0};
-bool   old_encoder_init = false;
-double odometry_x=0;
-double odometry_y=0;
-double odometry_th=0;
-#define VEL_TRANS 329.4531
-//circle/min trans to m/s,formula: 1circle/min = 1*(2*pi*0.029)/60 m/s.
-#define INVERSE_VEL_TRANS 0.00304
-//#define L 0.11
-#define PI 3.1415926
-double L=0;
-
-IMU_MSG   imu_info = {0};
-
-
-
-static int resetCount = 0;
-static bool sendOK = true;
-static bool lockSerialData = false;
-
-
-double q[4] = {0};
-
+//static int resetCount = 0;
+//static bool sendOK = true;
+//static bool lockSerialData = false;
 //float distance;
-
-std_msgs::Float32MultiArray  n;
-
-const float T = 0.1;
-const int F = 2;
-const int  alpha = 20;
-/*
-float x1 = 0.0;
-float x1_old = 0.0;
-float x2 = 0.0;
-float x2_old = 0.0;
-float x2_ = 0.0;
-*/
-
-
-class neo_bringup{
-protected:
-private:
-	ros::NodeHandle nh;
-    ros::Publisher odom_publisher;
-	ros::Publisher imu_publisher;
-	ros::Subscriber sub;
-    ros::Publisher sound_wave_publisher0;
-    ros::Publisher sound_wave_publisher1;
-    ros::Publisher sound_wave_publisher2;
-    ros::Publisher sound_wave_publisher3;
-	// tf::TransformBroadcaster tfbroadcaster;
-
-    sensor_msgs::Range sonar0;
-    sensor_msgs::Range sonar1;
-    sensor_msgs::Range sonar2;
-    sensor_msgs::Range sonar3;
-    sensor_msgs::Range sonar4;
-    sensor_msgs::Range sonar5;
-    sensor_msgs::Range sonar6;
-    sensor_msgs::Range sonar7;
-public:
-	neo_bringup();
-	
-	~neo_bringup();
-	void PublishOdom(nav_msgs::Odometry &odom);
-	void PublishImu(sensor_msgs::Imu &Imu);
-	void callbackCmdvel(const geometry_msgs::Twist& cmdvel_);
-  void PublishSound_wave(float *distance_);
-};
-
-
+//std_msgs::Float32MultiArray  n;
 
 neo_bringup::neo_bringup():
 	nh()
@@ -322,335 +169,7 @@ void neo_bringup::PublishSound_wave(float *distance_){
 }
 	  
 static neo_bringup *neo_bringup_node = NULL;
-bool updateOdometry(double diff_time )
-{
- // ROS_INFO("if you");
-  double odom_vel[3];
-
-  double wheel_l, wheel_r;      // rotation value of wheel [rad]
-  double delta_s, delta_theta,delta_theta1;
-  
-  double v, w;                  // v = translational velocity [m/s], w = rotational velocity [rad/s]
-  double step_time;
-  double temp;
-  wheel_l = wheel_r = 0.0;
-  delta_s = delta_theta = 0.0;
-  v = w = 0.0;
-  step_time = 0.0;
-
-  step_time = diff_time;
-
-  if (step_time == 0)
-    return false;
-  //printf("step_time-------%f\r\n",step_time);
-  wheel_l = TICK2RAD * (double)last_diff_tick_[LEFT];
-  wheel_r = TICK2RAD * (double)last_diff_tick_[RIGHT];
- // printf("wheel_l%f\r\n",wheel_l);
-  // printf("wheel_r%f\r\n",wheel_r);
-  if (isnan(wheel_l))
-    wheel_l = 0.0;
-
-  if (isnan(wheel_r))
-    wheel_r = 0.0;
-  
-  delta_s     = WHEEL_RADIUS * (wheel_r + wheel_l) / 2.0;
- // printf("delta_s-------%f\r\n",delta_s);
-  //delta_theta = WHEEL_RADIUS * (wheel_l - wheel_r) / WHEEL_SEPARATION;
-  delta_theta1  = atan2f(imu_info.x*imu_info.y + imu_info.w*imu_info.z,
-						 0.5f - imu_info.y*imu_info.y - imu_info.z*imu_info.z)  -last_theta;
-  //last_theta = atan2f(imu_info.x*imu_info.y + imu_info.w*imu_info.z,  0.5f - imu_info.y*imu_info.y - imu_info.z*imu_info.z);
-  v = delta_s / step_time;
-  w = delta_theta1 / step_time;
-//printf("delta_theta%f\r\n",delta_theta);
- // printf("delta_theta1%f\r\n",delta_theta1);
-  last_velocity_[LEFT]  = wheel_l / step_time;
-  last_velocity_[RIGHT] = wheel_r / step_time;
-
-  // compute odometric pose
-  odom_pose[0] += delta_s * cos(odom_pose[2] + (delta_theta1 / 2.0));
-  odom_pose[1] += delta_s * sin(odom_pose[2] + (delta_theta1 / 2.0));
-  odom_pose[2] += delta_theta1;
- // temp = odom_pose[2];
-  // compute odometric instantaneouse velocity
-  odom_vel[0] = v;
- // printf("temp-------%f\r\n",temp);
-  odom_vel[1] = 0.0;
-  odom_vel[2] = w;
-  //printf("w-------%f\r\n",w);
-  odom.header.stamp    = ros::Time::now();
-  odom.header.frame_id = "odom";
-  odom.child_frame_id  = "base_footprint";
- // odom.pose.pose.position.x = 0;
-  //odom.pose.pose.position.y = 0;
-  odom.pose.pose.position.x = odom_pose[0];
-  odom.pose.pose.position.y = odom_pose[1];
-  odom.pose.pose.position.z = 0;
-  geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(odom_pose[2]); 
-  odom.pose.pose.orientation = odom_quat; 
-
-  // We should update the twist of the odometry
-  odom.twist.twist.linear.x  = odom_vel[0];
-  odom.twist.twist.angular.z = odom_vel[2];
-
-  last_theta = atan2f(imu_info.x*imu_info.y + imu_info.w*imu_info.z,						 0.5f - imu_info.y*imu_info.y - imu_info.z*imu_info.z);
-   
- 	 //odom.header.stamp = stamp_now;
-
-     tf::TransformBroadcaster tfbroadcaster;
-     odom_tf.header.stamp = ros::Time::now();
-     odom_tf.header.frame_id = "odom";
-     odom_tf.child_frame_id = "base_footprint";
-    /* odom_tf.transform.rotation.w = 1.0;
-     odom_tf.transform.rotation.x = 0.0;
-     odom_tf.transform.rotation.y = 0.0;
-     odom_tf.transform.rotation.z = 0.0;
-
-     odom_tf.transform.translation.x = odom_pose[0];
-     odom_tf.transform.translation.y = odom_pose[1];
-     odom_tf.transform.translation.z = 0.0;*/
-
-     odom_tf.transform.translation.x = odom.pose.pose.position.x;
-     odom_tf.transform.translation.y = odom.pose.pose.position.y;
-     odom_tf.transform.translation.z = odom.pose.pose.position.z;
- 
-    odom_tf.transform.rotation = odom.pose.pose.orientation;
-     // tfbroadcaster.sendTransform(odom_tf);
-    /* 
-     tfs_msg.header.stamp = ros::Time::now();
-     tfs_msg.header.frame_id = "base_footprint";
-     tfs_msg.child_frame_id = "base_link";
-     tfs_msg.transform.rotation.w = 1.0;
-     tfs_msg.transform.rotation.x = 0.0;
-     tfs_msg.transform.rotation.y = 0.0;
-     tfs_msg.transform.rotation.z = 0.0;
-	
-     tfs_msg.transform.translation.x = 0.0;
-     tfs_msg.transform.translation.y = 0.0;
-     tfs_msg.transform.translation.z = 0.0;
-     tfbroadcaster.sendTransform(tfs_msg);
-*/
-}
-
-void publishDriveInformation(void)
-{  
-   //ros::NodeHandle n;  
- 
-   //ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
-   time_now = ros::Time::now();
-   //printf("time_now-----%f\r\n",time_now);
-   double step_time = ( time_now - prev_update_time).toSec();
-   prev_update_time = time_now;
-   //printf("step_time-----%f\r\n",step_time);
-   updateOdometry((double)(step_time));
-   odom.header.stamp = ros::Time::now();
-   //odom_pub.publish(odom);
-   neo_bringup_node->PublishOdom(odom);
-}
-
-int  odom_handle(void* read_data)
-{   
-     
-     tf::TransformBroadcaster  odom_broadcaster;
-     static geometry_msgs::TransformStamped   odom_tf;
-     static geometry_msgs::TransformStamped   tfs_msg;
-     odom_data recvData = {0};
-     int current_tick;
-     double wheel_l, wheel_r;      //       value of wheel [rad]
-     double delta_s, delta_theta;
-     
-     double v, w;                  // v = translational velocity [m/s], w = rotational velocity [rad/s]
-   
-       
-     wheel_l = wheel_r = 0.0;
-     delta_s = delta_theta = 0.0;
-     v = w = 0.0;
-     memcpy(&recvData,read_data,sizeof(odom_data));
-	 //printf("dsadsa\n");
-     if(recvData.left_encoder == 0){
-	 //printf("sdasdas\n");
-	  }
-      current_tick = recvData.left_encoder;
-     // printf("lef::%d\r\n",recvData.left_encoder);
-    // printf("right::%d \r\n",  recvData.right_encoder);
-     if (!init_encoder_[LEFT])
-     {
-      last_tick_[LEFT] = current_tick;
-      init_encoder_[LEFT] = true;
-     }
-   
-     last_diff_tick_[LEFT] = current_tick - last_tick_[LEFT];
-     // printf("current_tick::%d\r\n",current_tick);
-     // printf("last_diff_tick_[LEFT] :: %d\r\n",last_diff_tick_[LEFT] );  
-     last_tick_[LEFT] = current_tick;
-     last_rad_[LEFT] += TICK2RAD * (double)last_diff_tick_[LEFT];
-
-     current_tick = recvData.right_encoder;
-     
-     if (!init_encoder_[RIGHT])
-     {	
-       last_tick_[RIGHT] = current_tick;
-       init_encoder_[RIGHT] = true;
-     }
-
-     last_diff_tick_[RIGHT] = current_tick - last_tick_[RIGHT];
-    // printf("last_diff_tick_[RIGHT]--------%d\r\n",last_diff_tick_[RIGHT]);
-     last_tick_[RIGHT] = current_tick;
-     last_rad_[RIGHT] += TICK2RAD * (double)last_diff_tick_[RIGHT];
-     publishDriveInformation();
-}
-
-int sgn(float num)
-{
-      if(num > 0)
-                return 1;
-          else if (num == 0)
-                    return 0;
-              else 
-                        return -1;
-
-}
-
-float gsat(float a, float z, float b)
-{
-     if(z > b)
-               return b; 
-     else if(z >= a && z <= b)
-        return z;
-     else
-        return a;
-
-}
-
-float SlidingFilter(float distance, float &x1_old, float &x2_old){
-  float result = 0.0f; 
-  float x2 = 0.0f;
-  float x2_ = 0.0f;
-  if( distance > 2.0f ){
-  	distance = 2.0f;
-  }
-  x2_= sgn(x1_old - distance) * (F*T - sqrt(F*F*T*F + 2*F*abs(x1_old -distance)));
-  x2 = x2_old -gsat(gsat(-T*F*alpha, x2_old,-T*F), x2_old - x2_, gsat(T*F, x2_old, alpha*T*F));
-  result = T*x2 + x1_old;
-  x2_old = x2;
-  x1_old = result;
-
-  return result;
-}
-
-float x1_old[8] = {0};
-float x2_old[8] = {0};
-
-void sound_handle(void *read_data)
-{
-    float distance[8] = {0};
-    memcpy(&sound_time, read_data, sizeof(SOUND_TIME));
-    distance[0] =sound_time.sound_wave_time0;
-    distance[1] =sound_time.sound_wave_time1;
-    distance[2] =sound_time.sound_wave_time2;
-    distance[3] =sound_time.sound_wave_time3;
-
-    distance[0] = SlidingFilter(distance[0], x1_old[0], x2_old[0]);
-    distance[1] = SlidingFilter(distance[1], x1_old[1], x2_old[1]);
-    distance[2] = SlidingFilter(distance[2], x1_old[2], x2_old[2]);
-    distance[3] = SlidingFilter(distance[3], x1_old[3], x2_old[3]);
-
-    neo_bringup_node->PublishSound_wave(distance);
-}
-void imu_handle(void*  read_data)
-{   
-	//pthread_mutex_lock(&Device_mutex);
-	double th = 0.0;
-	ros::NodeHandle nh;
-	ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu", 100);
-
-	memcpy(&imu_info, read_data, sizeof(IMU_MSG));
-#if 0
-	printf("------\r\n");
-	th = atan2f(q[1]*q[2] + q[0]*q[3],0.5f - q[2]*q[2] - q[3]*q[3])*180/3.141592653;
-
-	printf("imu: %f\r\n",th);
-	printf("acc: \n%f  \n%f  \n%f\r\n  ",
-		(double)imu_info.acc[0],(double)imu_info.acc[1],(double)imu_info.acc[2]);
-	
-	printf("gyro: \n%f  \n%f  \n%f\r\n",(double)imu_info.gyro[0],(double)imu_info.gyro[1],(double)imu_info.gyro[2]);
-    
-	printf("q: \n%f  \n%f  \n%f \n%f\r\n",(double)imu_info.w,(double)imu_info.x,(double)imu_info.y,(double)imu_info.z);
-#endif
-	if( imu_info.gyro[0] == 0.0 
-		&& imu_info.gyro[1] == 0.0 
-		&& imu_info.gyro[2] == 0.0 
-		&& imu_info.acc[0] == 0.0)
-	{
-		return;
-	}
-
-	q[0] = imu_info.w;
-	q[1] = imu_info.x;
-	q[2] = imu_info.y;
-	q[3] = imu_info.z;
-
-        imu_msg.header.stamp    = ros::Time::now();
-	imu_msg.header.frame_id = "imu_link";
-
-	imu_msg.angular_velocity.x = imu_info.gyro[0];
-	imu_msg.angular_velocity.y = imu_info.gyro[1];
-	imu_msg.angular_velocity.z = imu_info.gyro[2];
-	imu_msg.angular_velocity_covariance[0] = 0.02;
-	imu_msg.angular_velocity_covariance[1] = th;
-	imu_msg.angular_velocity_covariance[2] = 0;
-	imu_msg.angular_velocity_covariance[3] = 0;
-	imu_msg.angular_velocity_covariance[4] = 0.02;
-	imu_msg.angular_velocity_covariance[5] = 0;
-	imu_msg.angular_velocity_covariance[6] = 0;
-	imu_msg.angular_velocity_covariance[7] = 0;
-	imu_msg.angular_velocity_covariance[8] = 0.02;
-
-	imu_msg.linear_acceleration.x = imu_info.acc[0];///1638.4;
-	imu_msg.linear_acceleration.y = imu_info.acc[1];///1638.4;
-	imu_msg.linear_acceleration.z = imu_info.acc[2];///1638.4;
-	imu_msg.linear_acceleration_covariance[0] = 0.04;
-	imu_msg.linear_acceleration_covariance[1] = 0;
-	imu_msg.linear_acceleration_covariance[2] = 0;
-	imu_msg.linear_acceleration_covariance[3] = 0;
-	imu_msg.linear_acceleration_covariance[4] = 0.04;
-	imu_msg.linear_acceleration_covariance[5] = 0;
-	imu_msg.linear_acceleration_covariance[6] = 0;
-	imu_msg.linear_acceleration_covariance[7] = 0;
-	imu_msg.linear_acceleration_covariance[8] = 0.04;
-
-	imu_msg.orientation.w = imu_info.w;
-	imu_msg.orientation.x = imu_info.x;
-	imu_msg.orientation.y = imu_info.y;
-	imu_msg.orientation.z = imu_info.z;
-
-	imu_msg.orientation_covariance[0] = 0.0025;
-	imu_msg.orientation_covariance[1] = 0;
-	imu_msg.orientation_covariance[2] = 0;
-	imu_msg.orientation_covariance[3] = 0;
-	imu_msg.orientation_covariance[4] = 0.0025;
-	imu_msg.orientation_covariance[5] = 0;
-	imu_msg.orientation_covariance[6] = 0;
-	imu_msg.orientation_covariance[7] = 0;
-	imu_msg.orientation_covariance[8] = 0.0025;
-
-	//imu_pub.publish(imu_msg);
-	neo_bringup_node->PublishImu(imu_msg);
-/*
-	static tf::TransformBroadcaster tfbroadcaster;
-	tfs_msg.header.stamp    = ros::Time::now();
-	tfs_msg.header.frame_id = "base_link";
-	tfs_msg.child_frame_id  = "imu_link";
-	tfs_msg.transform.rotation.w = imu_info.w;
-	tfs_msg.transform.rotation.x = imu_info.x;
-	tfs_msg.transform.rotation.y = imu_info.y;
-	tfs_msg.transform.rotation.z = imu_info.z;
-
-	tfs_msg.transform.translation.x = 0.0;
-	tfs_msg.transform.translation.y = 0.0;
-	tfs_msg.transform.translation.z = 0.15;*/
-
-//	tfbroadcaster.sendTransform(tfs_msg);
-}
+static CThreadPool *serialHandlePool = NULL;
 
 
 
@@ -674,13 +193,6 @@ bool checkSum(unsigned char* buf)
 	return true;
 }
 
-void LOG_Handle(void* buf,unsigned short len)
-{
-	//char buffer[516] = {0};  
-	//printf((char*)buf);
-}
-static int tmp = 0;
-
 void* package_thread(void* buf)
 {
     pthread_detach(pthread_self());
@@ -688,8 +200,8 @@ void* package_thread(void* buf)
     ST_PACKAGE_DATA readData;
     ST_PACKAGE_DATA *p_buf = (ST_PACKAGE_DATA *)buf;
     memcpy(&readData,buf,p_buf->len+2);
-    lock = 1;
-    pthread_mutex_lock(&Device_mutex);
+    //lock = 1;
+    //pthread_mutex_lock(&Device_mutex);
 	unsigned short len = 0;
 	//ROS_INFO("PACKAGE  %2X",buf[2])
 	switch(readData.mode)
@@ -698,7 +210,7 @@ void* package_thread(void* buf)
 			break;
 		case 1:
 //			printf("len = %d, %c\n",readData.len,readData.mode);
-			odom_handle(readData.data);
+			//odom_handle(readData.data);
 			
 			break;
 		case 2:
@@ -707,32 +219,29 @@ void* package_thread(void* buf)
 			break;
 		case 'I':
 			//printf("len = %d, %c\n",readData.len,readData.mode);
-			imu_handle(readData.data);
+			//imu_handle(readData.data);
 			break;
-    case 0x50:
-      //printf("hahahahahah\r\n");
-    	sound_handle(readData.data);
-      break;
+        case 0x50:
+    	    //sound_handle(readData.data);
+            break;
 		case 0x97:
 			//ROS_INFO("LOG");
-			LOG_Handle(readData.data,readData.len);
+			//LOG_Handle(readData.data,readData.len);
 			break;
 		case 0x98:
-			ROS_INFO("OK	 %d",tmp);
-			tmp++;
-			sendOK = true;
+			//sendOK = true;
 			break;
 		case 'T':
 			//if(readData.data[0] != 0xDD)return NULL;
 
             //printf("TEST===================RECV \n");
 
-			resetCount++;
+			//resetCount++;
 			break;
 		default:
 			break;
 	}
-	pthread_mutex_unlock(&Device_mutex);
+	//pthread_mutex_unlock(&Device_mutex);
 
 	return NULL;
 }
@@ -766,16 +275,19 @@ void* robot_serial_thread(void*)
                 head.len = ch;
             }else if(head.mode == 0){
                 head.mode = ch;
-                if( lock == 1 && serial.Read(readData.data,head.len,10) == head.len ){
+                if( serial.Read(readData.data,head.len,10) == head.len ){
                     readData.mode = head.mode;
                     readData.len = head.len;
-                    read_data = (char *) &readData.data[0];
-                    lock = 0;
 
-                    pthread_t id;
-                    bool ret;
-                    if (lock == 0){
-                        ret = pthread_create(&id,NULL,package_thread,(void*)&readData);
+                    if(serialHandlePool != NULL){
+                        switch(readData.mode)
+                        {
+                            case 0x50:
+                                serialHandlePool->addTask(new Sonar(readData.data));
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
                 memset(&head,0,sizeof(ST_PACKAGE_HEAD));
@@ -785,9 +297,10 @@ void* robot_serial_thread(void*)
     printf("serial end.\n");
 }
 
-
-
-
+neo_bringup *GetHandleNode()
+{
+    return neo_bringup_node;
+}
 
 int  main(int argc, char** argv)
 {   
@@ -801,7 +314,9 @@ int  main(int argc, char** argv)
 
 	neo_bringup node;
 	neo_bringup_node = &node;
-	
+
+    serialHandlePool = new CThreadPool(20);
+
   	if(argc > 1){
 		if(serial.Open((char*)argv[1], 115200, 8, NO, 1) == 0){
             printf("not found serial.\n");
@@ -817,7 +332,6 @@ int  main(int argc, char** argv)
 
 	pthread_t id;
 	bool ret;
-	pthread_mutex_init(&Device_mutex,NULL);
 	ret = pthread_create(&id,NULL,robot_serial_thread,NULL);
 	if(!ret)
 	{
@@ -828,12 +342,7 @@ int  main(int argc, char** argv)
 		printf("Fail to Create Thread.\n");
 		return 0;
 	}
-	
-
 	ros::spin();
-	
-	// Close serial port
 	serial.Close();
-	pthread_mutex_destroy(&Device_mutex);
 	return 0;
 }
