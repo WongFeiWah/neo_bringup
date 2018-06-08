@@ -137,7 +137,7 @@ void neo_bringup::PublishSound_wave(float *distance_){
   sonar0.radiation_type = 0; 
   sonar0.field_of_view = 15 * M_PI / 180;
   sonar0.min_range = 0.02;
-  sonar0.max_range = 4.0;
+  sonar0.max_range = 0.5;
   sonar0.range = distance_[0];
   
   sonar1.header.stamp = ros::Time::now();
@@ -145,7 +145,7 @@ void neo_bringup::PublishSound_wave(float *distance_){
   sonar1.radiation_type = 0;
   sonar1.field_of_view = 15 * M_PI / 180;
   sonar1.min_range = 0.02;
-  sonar1.max_range = 4.0;
+  sonar1.max_range = 0.5;
   sonar1.range = distance_[1];
  
   sonar2.header.stamp =ros::Time::now();
@@ -153,7 +153,7 @@ void neo_bringup::PublishSound_wave(float *distance_){
   sonar2.radiation_type = 0;
   sonar2.field_of_view = 15 * M_PI / 180;
   sonar2.min_range = 0.02;
-  sonar2.max_range = 4.0;
+  sonar2.max_range = 0.5;
   sonar2.range = distance_[2];
  
   sonar3.header.stamp = ros::Time::now();
@@ -161,7 +161,7 @@ void neo_bringup::PublishSound_wave(float *distance_){
   sonar3.radiation_type = 0;
   sonar3.field_of_view = 15 * M_PI / 180;
   sonar3.min_range = 0.02;
-  sonar3.max_range = 4.0;
+  sonar3.max_range = 0.5;
   sonar3.range = distance_[3];
   sound_wave_publisher0.publish(sonar0); 
   sound_wave_publisher1.publish(sonar1);

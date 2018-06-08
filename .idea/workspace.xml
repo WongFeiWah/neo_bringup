@@ -66,12 +66,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9722b6a4-85b3-4b5b-8870-8430106b87ea" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/include/neo_bringup/Imu.h" afterPath="$PROJECT_DIR$/include/neo_bringup/Imu.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/include/neo_bringup/Odom.h" afterPath="$PROJECT_DIR$/include/neo_bringup/Odom.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/include/neo_bringup/robot.h" afterPath="$PROJECT_DIR$/include/neo_bringup/robot.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/neo_bringup/Imu.cpp" afterPath="$PROJECT_DIR$/src/neo_bringup/Imu.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/neo_bringup/Odom.cpp" afterPath="$PROJECT_DIR$/src/neo_bringup/Odom.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/neo_bringup/sonar.cpp" afterPath="$PROJECT_DIR$/src/neo_bringup/sonar.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/robot.cpp" afterPath="$PROJECT_DIR$/src/robot.cpp" />
     </list>
     <ignored path="neo_bringup.iws" />
@@ -92,11 +86,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="robot.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="robot.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/robot.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="286" column="50" selection-start-line="286" selection-start-column="50" selection-end-line="286" selection-end-column="50" />
+            <state relative-caret-position="690">
+              <caret line="163" column="24" selection-start-line="163" selection-start-column="24" selection-end-line="163" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -168,11 +162,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Odom.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Odom.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/neo_bringup/Odom.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="784">
-              <caret line="239" column="23" selection-start-line="239" selection-start-column="23" selection-end-line="239" selection-end-column="23" />
+            <state relative-caret-position="-1796">
+              <caret line="67" column="20" selection-start-line="67" selection-start-column="20" selection-end-line="67" selection-end-column="20" />
               <folding>
                 <element signature="e#37#66#0" expanded="true" />
               </folding>
@@ -222,9 +216,9 @@
         <option value="$PROJECT_DIR$/src/neo_bringup/Imu.cpp" />
         <option value="$PROJECT_DIR$/include/neo_bringup/robot.h" />
         <option value="$PROJECT_DIR$/include/neo_bringup/Odom.h" />
-        <option value="$PROJECT_DIR$/src/robot.cpp" />
         <option value="$PROJECT_DIR$/src/neo_bringup/sonar.cpp" />
         <option value="$PROJECT_DIR$/src/neo_bringup/Odom.cpp" />
+        <option value="$PROJECT_DIR$/src/robot.cpp" />
       </list>
     </option>
   </component>
@@ -852,12 +846,12 @@
       <updated>1527755923605</updated>
       <workItem from="1527755924754" duration="789000" />
       <workItem from="1528362495875" duration="15644000" />
-      <workItem from="1528440926816" duration="5437000" />
+      <workItem from="1528440926816" duration="5833000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21870000" />
+    <option name="totallyTimeSpent" value="22266000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -1065,7 +1059,7 @@
         <state relative-caret-position="420">
           <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
           <folding>
-            <element signature="e#105#122#0" expanded="true" />
+            <element signature="e#105#122#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1130,11 +1124,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/robot.cpp">
+    <entry file="file://$PROJECT_DIR$/include/neo_bringup/Odom.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="286" column="50" selection-start-line="286" selection-start-column="50" selection-end-line="286" selection-end-column="50" />
+        <state relative-caret-position="285">
+          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/neo_bringup/Odom.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1796">
+          <caret line="67" column="20" selection-start-line="67" selection-start-column="20" selection-end-line="67" selection-end-column="20" />
+          <folding>
+            <element signature="e#37#66#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1148,21 +1152,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/include/neo_bringup/Odom.h">
+    <entry file="file://$PROJECT_DIR$/src/robot.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
+        <state relative-caret-position="690">
+          <caret line="163" column="24" selection-start-line="163" selection-start-column="24" selection-end-line="163" selection-end-column="24" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/neo_bringup/Odom.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="784">
-          <caret line="239" column="23" selection-start-line="239" selection-start-column="23" selection-end-line="239" selection-end-column="23" />
-          <folding>
-            <element signature="e#37#66#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
