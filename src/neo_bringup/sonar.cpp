@@ -44,12 +44,14 @@ float SlidingFilter(float distance, float &x1_old, float &x2_old){
     if( distance > 0.5f ){
         distance = 0.5f;
     }
-    x2_= sgn(x1_old - distance) * (F*T - sqrt(F*F*T*F + 2*F*abs(x1_old -distance)));
-    x2 = x2_old -gsat(gsat(-T*F*alpha, x2_old,-T*F), x2_old - x2_, gsat(T*F, x2_old, alpha*T*F));
-    result = T*x2 + x1_old;
+    x2_ = sgn(x1_old - distance) * (F * T - sqrt(F * F * T * F + 2 * F * abs(x1_old - distance)));
+    x2 = x2_old - gsat(gsat(-T * F * alpha, x2_old, -T * F), x2_old - x2_, gsat(T * F, x2_old, alpha * T * F));
+    result = T * x2 + x1_old;
     x2_old = x2;
     x1_old = result;
-
+    if( result > 0.5f ){
+        result = 0.5f;
+    }
     return result;
 }
 
